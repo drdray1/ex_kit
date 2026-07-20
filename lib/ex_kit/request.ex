@@ -14,6 +14,16 @@ defmodule ExKit.Request do
   @type response :: {:ok, map()} | {:error, term()}
 
   @doc """
+  Builds a query-params keyword list from `opts`, keeping only `allowed` keys
+  with non-nil values. Used by the list endpoints to pass pagination/filter
+  options straight through to Kit.
+  """
+  @spec query_params(keyword(), [atom()]) :: keyword()
+  def query_params(opts, allowed) do
+    for key <- allowed, value = opts[key], value != nil, do: {key, value}
+  end
+
+  @doc """
   Performs `method` against `path` (relative to the client `base_url`) and
   normalizes the response. Pass a request body with `opts[:json]` and query
   params with `opts[:params]`.

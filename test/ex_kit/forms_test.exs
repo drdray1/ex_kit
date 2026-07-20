@@ -5,6 +5,20 @@ defmodule ExKit.FormsTest do
 
   @stub __MODULE__.Stub
 
+  describe "list_forms/2" do
+    test "GETs /forms and passes status/type filters" do
+      Req.Test.stub(@stub, fn conn ->
+        assert conn.method == "GET"
+        assert conn.request_path == "/v4/forms"
+        assert URI.decode_query(conn.query_string) == %{"status" => "all", "type" => "embed"}
+        Req.Test.json(conn, Fixtures.page("forms", [%{"id" => 53, "name" => "Sign up"}]))
+      end)
+
+      assert {:ok, %{"forms" => [%{"id" => 53, "name" => "Sign up"}]}} =
+               Forms.list_forms(Fixtures.client(@stub), status: "all", type: "embed")
+    end
+  end
+
   describe "add_subscriber_to_form/4" do
     test "POSTs /forms/:id/subscribers with the email" do
       Req.Test.stub(@stub, fn conn ->

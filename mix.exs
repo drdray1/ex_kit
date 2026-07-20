@@ -1,7 +1,7 @@
 defmodule ExKit.MixProject do
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.2.0"
   @source_url "https://github.com/drdray1/ex_kit"
 
   def project do
@@ -60,7 +60,8 @@ defmodule ExKit.MixProject do
         API: [
           ExKit.Subscribers,
           ExKit.Forms,
-          ExKit.Tags
+          ExKit.Tags,
+          ExKit.CustomFields
         ],
         Client: [
           ExKit.Client,

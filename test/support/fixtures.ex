@@ -29,6 +29,23 @@ defmodule ExKit.Fixtures do
     %{"subscriber" => subscriber}
   end
 
+  @doc "A canned Kit list response: `{\"<key>\" => items, \"pagination\" => ...}`."
+  def page(key, items, pagination_overrides \\ %{}) do
+    pagination =
+      Map.merge(
+        %{
+          "has_previous_page" => false,
+          "has_next_page" => false,
+          "start_cursor" => "MTI=",
+          "end_cursor" => "MTE=",
+          "per_page" => 500
+        },
+        pagination_overrides
+      )
+
+    %{key => items, "pagination" => pagination}
+  end
+
   @doc "Reads and decodes a request `Plug.Conn`'s JSON body."
   def read_body(conn) do
     {:ok, body, _conn} = Plug.Conn.read_body(conn)

@@ -5,6 +5,28 @@ defmodule ExKit.Forms do
 
   alias ExKit.{Client, Request}
 
+  @list_params [:after, :before, :per_page, :include_total_count, :include, :status, :type]
+
+  @doc """
+  Lists the account's forms (and landing pages).
+
+  `GET /v4/forms`. Options become query params:
+
+    * `:after` / `:before` — pagination cursors.
+    * `:per_page` — results per page (Kit defaults to 500, max 1000).
+    * `:include_total_count` — set `true` to include a total count.
+    * `:include` — comma-separated extras, e.g. `"subscriber_count"`.
+    * `:status` — `"active"` (Kit's default), `"archived"`, `"trashed"`, or
+      `"all"`.
+    * `:type` — `"embed"` (embedded forms) or `"hosted"` (landing pages).
+
+  Returns `{:ok, %{"forms" => [...], "pagination" => %{...}}}`.
+  """
+  @spec list_forms(Client.t(), keyword()) :: Request.response()
+  def list_forms(%Client{} = client, opts \\ []) do
+    Request.request(client, :get, "/forms", params: Request.query_params(opts, @list_params))
+  end
+
   @doc """
   Adds a subscriber to a form by email address.
 
