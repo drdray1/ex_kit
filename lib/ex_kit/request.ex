@@ -51,12 +51,13 @@ defmodule ExKit.Request do
   Normalizes a Kit API response to `{:ok, body}` or `{:error, reason}`.
 
   Kit returns `200` (updated), `201` (created), and `202` (async processing) for
-  successful writes; all map to `{:ok, body}`.
+  successful writes; all map to `{:ok, body}`. `204 No Content` (returned by
+  deletes and unsubscribe) carries an empty body, normalized to `{:ok, %{}}`.
   """
   @spec handle_response({:ok, Req.Response.t()} | {:error, term()}) :: response()
   def handle_response({:ok, %Req.Response{status: status, body: body}})
       when status in 200..299,
-      do: {:ok, body}
+      do: {:ok, normalize_body(body)}
 
   def handle_response({:ok, %Req.Response{status: status}}) when status in [401, 403],
     do: {:error, :unauthorized}
@@ -72,6 +73,10 @@ defmodule ExKit.Request do
     do: {:error, {:unexpected_status, status}}
 
   def handle_response({:error, reason}), do: {:error, {:connection_error, reason}}
+
+  # 204 No Content and other empty successful bodies normalize to an empty map.
+  defp normalize_body(body) when body in ["", nil], do: %{}
+  defp normalize_body(body), do: body
 
   # --- Headers ----------------------------------------------------------------
 

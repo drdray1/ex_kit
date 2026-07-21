@@ -27,4 +27,13 @@ defmodule ExKitTest do
     assert {:ok, %{"subscriber" => _}} =
              ExKit.create_subscriber(Fixtures.client(@stub), "alice@example.com")
   end
+
+  test "delegates list_webhooks to ExKit.Webhooks" do
+    Req.Test.stub(@stub, fn conn ->
+      assert conn.request_path == "/v4/webhooks"
+      Req.Test.json(conn, Fixtures.page("webhooks", []))
+    end)
+
+    assert {:ok, %{"webhooks" => []}} = ExKit.list_webhooks(Fixtures.client(@stub))
+  end
 end

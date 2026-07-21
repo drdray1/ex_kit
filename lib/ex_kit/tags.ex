@@ -47,4 +47,30 @@ defmodule ExKit.Tags do
   def tag_subscriber(%Client{} = client, tag_id, email, _opts \\ []) when is_binary(email) do
     Request.request(client, :post, "/tags/#{tag_id}/subscribers", json: %{email_address: email})
   end
+
+  @doc """
+  Removes a tag from a subscriber identified by email address.
+
+  `DELETE /v4/tags/{tag_id}/subscribers?email_address=...`. The mirror of
+  `tag_subscriber/4`; use it when you only know the subscriber's email. Kit
+  responds `204 No Content`, normalized to `{:ok, %{}}`.
+  """
+  @spec untag_subscriber(Client.t(), String.t() | integer(), String.t()) :: Request.response()
+  def untag_subscriber(%Client{} = client, tag_id, email) when is_binary(email) do
+    Request.request(client, :delete, "/tags/#{tag_id}/subscribers",
+      params: [email_address: email]
+    )
+  end
+
+  @doc """
+  Removes a tag from a subscriber identified by Kit subscriber id.
+
+  `DELETE /v4/tags/{tag_id}/subscribers/{subscriber_id}` — Kit's canonical
+  removal endpoint. Kit responds `204 No Content`, normalized to `{:ok, %{}}`.
+  """
+  @spec untag_subscriber_by_id(Client.t(), String.t() | integer(), String.t() | integer()) ::
+          Request.response()
+  def untag_subscriber_by_id(%Client{} = client, tag_id, subscriber_id) do
+    Request.request(client, :delete, "/tags/#{tag_id}/subscribers/#{subscriber_id}")
+  end
 end

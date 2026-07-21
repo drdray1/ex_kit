@@ -19,6 +19,13 @@ defmodule ExKit.RequestTest do
       end
     end
 
+    test "204 with an empty body returns {:ok, %{}}" do
+      Req.Test.stub(@stub, fn conn -> Plug.Conn.send_resp(conn, 204, "") end)
+
+      assert {:ok, %{}} =
+               Request.request(Fixtures.client(@stub), :delete, "/webhooks/9")
+    end
+
     test "401 and 403 map to :unauthorized" do
       for status <- [401, 403] do
         Req.Test.stub(@stub, fn conn -> Plug.Conn.send_resp(conn, status, "") end)

@@ -19,6 +19,33 @@ defmodule ExKit.TagsTest do
     end
   end
 
+  describe "untag_subscriber/3" do
+    test "DELETEs /tags/:id/subscribers with the email as a query param" do
+      Req.Test.stub(@stub, fn conn ->
+        assert conn.method == "DELETE"
+        assert conn.request_path == "/v4/tags/207/subscribers"
+        assert URI.decode_query(conn.query_string) == %{"email_address" => "alice@example.com"}
+        Plug.Conn.send_resp(conn, 204, "")
+      end)
+
+      assert {:ok, %{}} =
+               Tags.untag_subscriber(Fixtures.client(@stub), 207, "alice@example.com")
+    end
+  end
+
+  describe "untag_subscriber_by_id/3" do
+    test "DELETEs /tags/:id/subscribers/:subscriber_id" do
+      Req.Test.stub(@stub, fn conn ->
+        assert conn.method == "DELETE"
+        assert conn.request_path == "/v4/tags/207/subscribers/349"
+        assert conn.query_string == ""
+        Plug.Conn.send_resp(conn, 204, "")
+      end)
+
+      assert {:ok, %{}} = Tags.untag_subscriber_by_id(Fixtures.client(@stub), 207, 349)
+    end
+  end
+
   describe "list_tags/2" do
     test "GETs /tags with no params by default" do
       Req.Test.stub(@stub, fn conn ->
