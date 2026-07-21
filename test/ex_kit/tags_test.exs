@@ -17,6 +17,22 @@ defmodule ExKit.TagsTest do
       assert {:ok, %{"subscriber" => _}} =
                Tags.tag_subscriber(Fixtures.client(@stub), 207, "alice@example.com")
     end
+
+    test "includes a referrer when given" do
+      Req.Test.stub(@stub, fn conn ->
+        assert Fixtures.read_body(conn) == %{
+                 "email_address" => "alice@example.com",
+                 "referrer" => "https://capitalwesthomes.com/contact"
+               }
+
+        Req.Test.json(conn, Fixtures.subscriber())
+      end)
+
+      assert {:ok, _} =
+               Tags.tag_subscriber(Fixtures.client(@stub), 207, "alice@example.com",
+                 referrer: "https://capitalwesthomes.com/contact"
+               )
+    end
   end
 
   describe "untag_subscriber/3" do

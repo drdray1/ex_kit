@@ -23,6 +23,17 @@ defmodule ExKit.CustomFieldsTest do
       assert {:ok, %{"custom_fields" => [%{"key" => "phone"}]}} =
                CustomFields.list_custom_fields(Fixtures.client(@stub), per_page: 100)
     end
+
+    test "GETs /custom_fields with no params when called without options" do
+      Req.Test.stub(@stub, fn conn ->
+        assert conn.request_path == "/v4/custom_fields"
+        assert conn.query_string == ""
+        Req.Test.json(conn, Fixtures.page("custom_fields", []))
+      end)
+
+      assert {:ok, %{"custom_fields" => []}} =
+               CustomFields.list_custom_fields(Fixtures.client(@stub))
+    end
   end
 
   describe "create_custom_field/2" do

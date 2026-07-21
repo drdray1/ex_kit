@@ -1,7 +1,7 @@
 defmodule ExKit.MixProject do
   use Mix.Project
 
-  @version "0.3.0"
+  @version "0.4.0"
   @source_url "https://github.com/drdray1/ex_kit"
 
   def project do
@@ -12,7 +12,7 @@ defmodule ExKit.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       elixirc_paths: elixirc_paths(Mix.env()),
-      test_coverage: [threshold: 80, summary: [threshold: 80]],
+      test_coverage: [threshold: 90, summary: [threshold: 90]],
 
       # Hex
       description: "Elixir client for the Kit (formerly ConvertKit) v4 email-marketing API",

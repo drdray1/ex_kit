@@ -40,12 +40,23 @@ defmodule ExKit.Tags do
   Tags a subscriber by email address.
 
   `POST /v4/tags/{tag_id}/subscribers`. The subscriber is upserted if they don't
-  already exist. Returns `{:ok, %{"subscriber" => %{...}}}`.
+  already exist.
+
+  Options:
+
+    * `:referrer` — the referring URL (may carry UTM params), recorded as signup
+      attribution on the subscriber (as with `ExKit.Forms.add_subscriber_to_form/4`).
+
+  Returns `{:ok, %{"subscriber" => %{...}}}`.
   """
   @spec tag_subscriber(Client.t(), String.t() | integer(), String.t(), keyword()) ::
           Request.response()
-  def tag_subscriber(%Client{} = client, tag_id, email, _opts \\ []) when is_binary(email) do
-    Request.request(client, :post, "/tags/#{tag_id}/subscribers", json: %{email_address: email})
+  def tag_subscriber(%Client{} = client, tag_id, email, opts \\ []) when is_binary(email) do
+    body =
+      %{email_address: email}
+      |> put_optional(:referrer, opts[:referrer])
+
+    Request.request(client, :post, "/tags/#{tag_id}/subscribers", json: body)
   end
 
   @doc """
@@ -73,4 +84,7 @@ defmodule ExKit.Tags do
   def untag_subscriber_by_id(%Client{} = client, tag_id, subscriber_id) do
     Request.request(client, :delete, "/tags/#{tag_id}/subscribers/#{subscriber_id}")
   end
+
+  defp put_optional(map, _key, nil), do: map
+  defp put_optional(map, key, value), do: Map.put(map, key, value)
 end

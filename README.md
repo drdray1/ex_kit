@@ -111,6 +111,7 @@ Every function takes the `client` as its first argument and returns
 - `ExKit.create_tag/2` — `POST /v4/tags`. Idempotent on name (an existing tag
   is returned rather than duplicated), so it's a safe find-or-create.
 - `ExKit.tag_subscriber/4` — `POST /v4/tags/{tag_id}/subscribers` (by email).
+  Option: `:referrer` (records signup attribution, as with the form call).
 - `ExKit.untag_subscriber/3` — `DELETE /v4/tags/{tag_id}/subscribers` (by
   email); the mirror of `tag_subscriber/4`. Returns `{:ok, %{}}`.
 - `ExKit.untag_subscriber_by_id/3` — `DELETE

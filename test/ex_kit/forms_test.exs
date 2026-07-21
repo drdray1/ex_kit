@@ -17,6 +17,16 @@ defmodule ExKit.FormsTest do
       assert {:ok, %{"forms" => [%{"id" => 53, "name" => "Sign up"}]}} =
                Forms.list_forms(Fixtures.client(@stub), status: "all", type: "embed")
     end
+
+    test "GETs /forms with no params when called without options" do
+      Req.Test.stub(@stub, fn conn ->
+        assert conn.request_path == "/v4/forms"
+        assert conn.query_string == ""
+        Req.Test.json(conn, Fixtures.page("forms", []))
+      end)
+
+      assert {:ok, %{"forms" => []}} = Forms.list_forms(Fixtures.client(@stub))
+    end
   end
 
   describe "add_subscriber_to_form/4" do
