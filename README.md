@@ -14,7 +14,7 @@ struct, `{:ok, _}` / `{:error, _}` returns, `Req.Test`-backed tests).
 ```elixir
 def deps do
   [
-    {:ex_kit, git: "https://github.com/drdray1/ex_kit.git", tag: "0.3.0"}
+    {:ex_kit, git: "https://github.com/drdray1/ex_kit.git", tag: "0.4.1"}
   ]
 end
 ```

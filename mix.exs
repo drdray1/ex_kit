@@ -1,7 +1,7 @@
 defmodule ExKit.MixProject do
   use Mix.Project
 
-  @version "0.4.0"
+  @version "0.4.1"
   @source_url "https://github.com/drdray1/ex_kit"
 
   def project do
